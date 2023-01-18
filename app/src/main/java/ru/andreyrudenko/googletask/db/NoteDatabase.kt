@@ -1,4 +1,27 @@
 package ru.andreyrudenko.googletask.db
 
-class NoteDatabase {
+import android.content.Context
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import ru.andreyrudenko.googletask.db.dao.NoteDao
+import ru.andreyrudenko.googletask.model.NoteModel
+
+@Database(entities = [NoteModel::class], version = 1)
+abstract class NoteDatabase: RoomDatabase() {
+    abstract fun getAll(): NoteDao
+
+    companion object {
+        private var database: NoteDatabase ?= null
+
+        @Synchronized
+        fun getInstance(context: Context):NoteDatabase {
+            return if (database == null) {
+                database = Room.databaseBuilder(context, NoteDatabase::class.java, "db").build()
+                database as NoteDatabase
+            } else {
+                database as NoteDatabase
+            }
+        }
+    }
 }
